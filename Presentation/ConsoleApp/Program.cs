@@ -1,11 +1,12 @@
-﻿using ConsoleApp.Commands;
-using ConsoleApp.CommandsExecutor;
+﻿using ConsoleApp.CommandsExecutor;
+using ConsoleApp.UserInterfaces;
 
 internal class Program
 {
     public static void Main(string[] args)
     {
-        ICommandsExecutor executor = CreateExecutor();
+        var consoleExecutorFactory = new ConsoleExecutorFactory();
+        var executor = consoleExecutorFactory.CreateExecutor();
         if (args.Length > 0)
             executor.Execute(args);
         else
@@ -14,20 +15,11 @@ internal class Program
 
     static void RunInteractiveMode(ICommandsExecutor executor)
     {
+        var userInterface = new ConsoleUserInterface(Console.In, Console.Out, executor);
         while (true)
         {
-            var line = Console.ReadLine(); ///TODO: здесь нужно подумать о получении сообщения от пользователя
-            if (line == null || line == "exit")
-                return;
-            executor.Execute(line.Split(' '));
+            var line = userInterface.GetCommandName();
+            userInterface.HandleUserInput(line);
         }
-    }
-
-    static ICommandsExecutor CreateExecutor()
-    {
-        var executor = new CommandsExecutor(Console.Out, Console.In);
-        executor.Register(new StartGameCommand("start"));
-        //executor.Register(new LoadCommand("loads"));
-        return executor;
     }
 }

@@ -9,12 +9,21 @@ namespace ConsoleApp.Commands
 {
     public class StartGameCommand : BaseCommand
     {
+        private readonly string name;
         public StartGameCommand(string name) : base(name)
-        { }
-
-        public override void Execute(string[] args, TextWriter writer, TextReader reader)
         {
-            writer.WriteLine("Здесь создание игрока и старт игры");
+            this.name = name;
+        }
+
+        public override object Clone()
+        {
+            return new StartGameCommand(name);
+        }
+
+        public override string Execute(string[] args)
+        {
+            ///TODO: "Здесь создание игрока и старт игры";
+            return "Старт";
         }
     }
 }

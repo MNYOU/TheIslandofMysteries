@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleApp.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,8 @@ namespace ConsoleApp.CommandsExecutor
 {
     public interface ICommandsExecutor
     {
+        public List<BaseCommand> GetCommands();
         string[] GetAvailableCommandName();
-        void Execute(string[] args);
+        string Execute(string[] args);
     }
 }

@@ -9,19 +9,21 @@ namespace ConsoleApp.CommandsExecutor
 {
     public class CommandsExecutor : ICommandsExecutor
     {
-        private readonly TextWriter writer;
-        private readonly TextReader reader;
-        private readonly List<BaseCommand> commands = new List<BaseCommand>();
+        private readonly List<BaseCommand> commands;
 
-        public CommandsExecutor(TextWriter writer, TextReader reader)
+        public CommandsExecutor()
         {
-            this.reader = reader;
-            this.writer = writer;
+            commands = new List<BaseCommand>();
         }
 
         public void Register(BaseCommand command)
         {
             commands.Add(command);
+        }
+
+        public List<BaseCommand> GetCommands()
+        {
+            return commands.Select(item => (BaseCommand)item.Clone()).ToList();
         }
 
         public string[] GetAvailableCommandName()
@@ -34,20 +36,18 @@ namespace ConsoleApp.CommandsExecutor
             return commands.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public void Execute(string[] args)
+        public string Execute(string[] args)
         {
             if (args[0].Length == 0)
             {
-                Console.WriteLine("Please specify <command> as the first command line argument");
-                return;
+                throw new ArgumentException("Please specify <command> as the first command line argument");
             }
 
             var commandName = args[0];
             var cmd = FindCommandByName(commandName);
             if (cmd == null)
-                writer.WriteLine("Sorry. Unknown command {0}", commandName);
-            else
-                cmd.Execute(args, writer, reader);
+                throw new Exception($"Sorry. Unknown command {commandName}");
+            return cmd.Execute(args);
         }
     }
 }

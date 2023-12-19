@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp.Commands
 {
-    public abstract class BaseCommand
+    public abstract class BaseCommand : ICloneable
     {
         protected BaseCommand(string name)
         {
@@ -14,6 +14,9 @@ namespace ConsoleApp.Commands
         }
 
         public string Name { get; }
-        public abstract void Execute(string[] args, TextWriter writer, TextReader reader);
+
+        public abstract object Clone();
+
+        public abstract string Execute(string[] args);
     }
 }
