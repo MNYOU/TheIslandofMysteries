@@ -8,8 +8,16 @@ namespace Domain.Entities.Challenges
 {
     public class SnakeChallenge : Challenge
     {
-        public override bool IsPassed { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
-        public override string ProgressTitle { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        private Random rnd;
+        private int levelDangerSnake;
+        public override bool IsPassed { get; protected set; }
+        public override string ProgressTitle { get; protected set; }
+        public SnakeChallenge() 
+        { 
+            rnd = new Random();
+            levelDangerSnake = rnd.Next(0, 10);
+
+        }
 
         protected override void ExecuteProgressCommand(IReadOnlyCommand command)
         {
@@ -19,6 +27,6 @@ namespace Domain.Entities.Challenges
         protected override IEnumerable<ICommand> GetProgressCommands()
         {
             throw new NotImplementedException();
-        }
+        } 
     }
 }
