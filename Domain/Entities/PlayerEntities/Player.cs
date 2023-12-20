@@ -14,10 +14,10 @@ public class Player
 
     public PlayerState State { get; set; }
 
-    public IEnumerable<IReadOnlyCommand> GetAvailableActions()
+    public IEnumerable<ICommand> GetAvailableActions()
     {
         if (IsAlive) return Array.Empty<ICommand>();
 
-        return Array.Empty<IReadOnlyCommand>();
+        return Array.Empty<ICommand>();
     }
 }

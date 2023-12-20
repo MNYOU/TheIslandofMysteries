@@ -11,7 +11,7 @@ public class Storm: Challenge
         throw new NotImplementedException();
     }
 
-    protected override IEnumerable<IReadOnlyCommand> GetProgressCommands()
+    protected override IEnumerable<ICommand> GetProgressCommands()
     {
         throw new NotImplementedException();
     }

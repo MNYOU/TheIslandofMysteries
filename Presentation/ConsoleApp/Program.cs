@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using Application.GameEngine;
+﻿using Application.GameEngine;
 using Application.GameEngine.Controllers;
 using Domain;
 
@@ -20,8 +18,8 @@ internal class Program
             Console.WriteLine(context.Title);
             var commands = context.GetAvailableActions();
             Write(commands);
-            var userInput = Console.ReadLine();
-            var selected = commands.FirstOrDefault(c => c.Key == userInput);
+            var userInput = Console.ReadKey();
+            var selected = commands.FirstOrDefault(c => c.Key == userInput.KeyChar);
             if (selected == null)
             {
                 Console.WriteLine("Ошибка. Неверный ввод!");
@@ -32,7 +30,7 @@ internal class Program
         }
     }
 
-    private static void Write(IEnumerable<IReadOnlyCommand> commands)
+    private static void Write(IEnumerable<ICommand> commands)
     {
         Console.WriteLine("Выберите действия: ");
         foreach (var command in commands)

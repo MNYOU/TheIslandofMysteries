@@ -1,15 +1,12 @@
 ﻿namespace Domain.Commands;
 
-public class FinishCommand: IReadOnlyCommand
+public class FinishCommand: ICommand
 {
-    public Guid Id { get; set; }
+    public char Key => 'e';
     public string Title => "Закончить игру";
-    public string Key { get; set; }
-
-    public FinishCommand()
+    public void Execute()
     {
-        Key = "e";
-        // Title = "Что... ж. В этот раз вам повезло. Удачи, ведь скоро вы снова вернетесь на остров";
         
+        Environment.Exit(1);
     }
 }

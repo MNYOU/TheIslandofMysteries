@@ -1,5 +1,6 @@
-﻿using Domain.Entities.Challenges;
-using Domain.Entities.Commands;
+﻿using Domain.Commands;
+using Domain.Commands.Locations;
+using Domain.Entities.Challenges;
 using Domain.Enums;
 
 namespace Domain.Entities.Locations;
@@ -33,18 +34,19 @@ public abstract class Location : IContext
 
     public string Title { get; }
 
-    public IEnumerable<IReadOnlyCommand> GetAvailableActions()
+    public IEnumerable<ICommand> GetAvailableActions()
     {
         if (CurrentChallenge == null || CurrentChallenge.State == ChallengeState.Finished && CurrentChallenge != Challenges.Last())
-            return new IReadOnlyCommand[]
+            return new ICommand[]
             {
-                new BaseCommand("n", "Перейти к следующему испытанию."),
+                new GoToNextCommand(this),
             };
-        return new IReadOnlyCommand[0];
+        return new ICommand[0];
     }
 
     public void Execute(IReadOnlyCommand command)
     {
+        return;
         if (command.Key == "n")
         {
             if (CurrentChallenge != null && CurrentChallenge.State != ChallengeState.Finished)

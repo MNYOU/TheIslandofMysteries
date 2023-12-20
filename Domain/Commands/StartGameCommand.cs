@@ -1,14 +1,22 @@
-﻿namespace Domain.Commands;
+﻿using Domain.Entities;
 
-public class StartGameCommand: IReadOnlyCommand
+namespace Domain.Commands;
+
+public class StartGameCommand: ICommand
 {
-    public Guid Id { get; set; }
-    public string Title { get; }
-    public string Key { get; set; }
+    private readonly Game _game;
 
-    public StartGameCommand()
+    public StartGameCommand(Game game)
     {
-        Title = "Начать игру";
-        Key = "n";
+        _game = game;
+    }
+    
+    public char Key => 's';
+
+    public string Title => "Начать игру";
+    
+    public void Execute()
+    {
+        // TODO
     }
 }

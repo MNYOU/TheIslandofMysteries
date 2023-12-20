@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Commands;
+﻿using Domain.Commands;
+using Domain.Commands.Maps;
 using Domain.Entities.Locations;
 using Domain.Enums;
 
@@ -15,7 +16,7 @@ public class Map: IContext
     
     public Location PlayerLocation { get; private set; }
 
-    private void MovePlayer()
+    public void MovePlayerToNextLocation()
     {
         var index = Locations.IndexOf(PlayerLocation);
         if (index == Locations.Count - 1)
@@ -25,23 +26,24 @@ public class Map: IContext
 
     public string Title { get; }
 
-    public IEnumerable<IReadOnlyCommand> GetAvailableActions()
+    public IEnumerable<ICommand> GetAvailableActions()
     {
         var index = Locations.IndexOf(PlayerLocation);
         if (index == Locations.Count - 1)
         {
-            return new IReadOnlyCommand[0];
+            return new ICommand[0];
         }
 
         var nextLoc = Locations[index + 1];
-        return new IReadOnlyCommand[] { new BaseCommand("m", $"Двигаться к точке: {nextLoc.Description}") };
+        return new ICommand[] { new GoToNextCommand(this, nextLoc) };
     }
 
     public void Execute(IReadOnlyCommand command)
     {
+        return;
         if (command.Key == "m")
         {
-            MovePlayer();
+            MovePlayerToNextLocation();
         }
         else
             throw new ArgumentException();

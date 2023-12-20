@@ -1,8 +1,11 @@
 ﻿namespace Domain.Commands;
 
-public class ExitCommand: IReadOnlyCommand
+public class ExitCommand: ICommand
 {
-    public Guid Id { get; set; }
-    public string Title { get; }
-    public string Key { get; set; }
+    public char Key => 'e';
+    public string Title => "Выйти из игры";
+    public void Execute()
+    {
+        Environment.Exit(1);
+    }
 }

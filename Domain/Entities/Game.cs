@@ -48,7 +48,7 @@ public class Game: IContext
             Result = GameResult.Passed;
     }
 
-    public IEnumerable<IReadOnlyCommand> GetAvailableActions()
+    public IEnumerable<ICommand> GetAvailableActions()
     {
         UpdateContext();
         if (context == this)
@@ -57,60 +57,55 @@ public class Game: IContext
             {
                 if (Result == GameResult.Passed)
                 {
-                    return new IReadOnlyCommand[]
+                    return new ICommand[]
                     {
                         new FinishCommand(),
                     };
                 }
             }
-            return new IReadOnlyCommand[]
+            return new ICommand[]
             {
-                new StartGameCommand(),
+                new StartGameCommand(this),
             };
         }
         return context.GetAvailableActions();
     }
 
-    public void Execute(IReadOnlyCommand command)
+    public void Execute(ICommand command)
     {
-        if (GetAvailableActions().All(c => c.Key != command.Key))
-            throw new ArgumentException();
-        
-        ExecuteAction(command);
+        command.Execute();
+        // if (GetAvailableActions().All(c => c.Key != command.Key))
+        //     throw new ArgumentException();
+        //
+        // ExecuteAction(command);
     }
     
-    private void ExecuteAction(IReadOnlyCommand command)
+    private void ExecuteAction(ICommand command)
     {
-        UpdateContext();
-        if (context == this)
-        {
-            if (command.Key[0] == 'n')
-            {
-                
-            }
-            else if (command.Key[0] == 'e')
-            {
-                Environment.Exit(1);
-            }
-
-            return;
-        }
-        else
-        {
-            context.Execute(command);
-        }
-    }
-
-    private void UpdateGameResult()
-    {
-        // может логику перенести в поле?
+        return;
+        // command.Execute();
+        // UpdateContext();
+        // if (context == this)
+        // {
+        //     if (command.Key[0] == 'n')
+        //     {
+        //         
+        //     }
+        //     else if (command.Key[0] == 'e')
+        //     {
+        //         Environment.Exit(1);
+        //     }
+        //
+        //     return;
+        // }
+        // else
+        // {
+        //     context.Execute(command);
+        // }
     }
 
     private void UpdateContext()
     {
-        // попробовать linkedList?
-        // начинать с конца
-
         if (!Player.IsAlive)
         {
             context = this;

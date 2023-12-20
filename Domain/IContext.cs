@@ -6,7 +6,7 @@ public interface IContext
 
     // public string ProgressTitle { get; set; }
     
-    public IEnumerable<IReadOnlyCommand> GetAvailableActions();
+    public IEnumerable<ICommand> GetAvailableActions();
 
-    public void Execute(IReadOnlyCommand command);
+    // public void Execute(IReadOnlyCommand command);
 }

@@ -2,23 +2,20 @@
 
 namespace Domain.Commands;
 
-public class StartChallengeCommand: IReadOnlyCommand
+public class StartChallengeCommand: ICommand
 {
-    public Guid Id { get; set; }
+    private readonly Challenge _challenge;
 
-    public string Title => "Начать испытание";
-    public string Key { get; set; }
-
-    private Challenge challenge;
-
-    public StartChallengeCommand()
+    public StartChallengeCommand(Challenge challenge)
     {
-        Key = "1.";
-        // this.challenge = challenge;
+        this._challenge = challenge;
     }
 
-    // public void Execute()
-    // {
-    //     challenge.Start();
-    // }
+    public char Key => 's';
+    public string Title => "Начать испытание";
+    
+    public void Execute()
+    {
+       _challenge.Start();
+    }
 }

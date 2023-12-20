@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Text;
 using Domain.Commands;
-using Domain.Entities.Commands;
+using Domain.Commands.Maze;
 using Domain.Enums;
 using Infrastructure.Extensions;
 
@@ -9,8 +9,8 @@ namespace Domain.Entities.Challenges;
 
 public class MazeChallenge : Challenge
 {
-    private IEnumerable<IMazeCommand> commands;
-    
+    private Point _playerPosition;
+
     public MazeChallenge(string stringMaze)
     {
         Maze = MapMazeFromString(stringMaze);
@@ -21,39 +21,46 @@ public class MazeChallenge : Challenge
         Width = width;
         Height = height;
 
-        GetProgressCommands();
-        UpdateTitle();
+        // UpdateProgressTitle();
     }
+    
+    private readonly Dictionary<Point, char> _directions = new()
+    {
+        [new Point(0, -1)] = 'u',
+        [new Point(-1, 0)] = 'l',
+        [new Point(0, 1)] = 'd',
+        [new Point(1, 0)] = 'r',
+    };
 
-    public bool[,] Maze { get; }
-
-    private Dictionary<Point, string> directions;
+    private bool[,] Maze { get; }
 
     public int Width { get; }
 
     public int Height { get; }
-
-    public Point PlayerPosition { get; private set; }
-
-
+    
     public override bool IsPassed { get; protected set; }
-    public override string ProgressTitle { get; protected set; }
 
-    protected override void ExecuteProgressCommand(IReadOnlyCommand command)
+    public override string ProgressTitle { get; protected set; } = "";
+
+    public Point PlayerPosition
     {
-        if (commands.FirstOrDefault(x => x.Key == command.Key) is MazeCommand mazeCommand)
+        get => _playerPosition;
+        set
         {
-            MovePlayer(mazeCommand.Destination);
-            UpdateState();
-            UpdateTitle();
-        }
-        else
-        {
-            throw new ArgumentException();
+            if (value.X < 0 || value.X >= Width || value.Y < 0 || value.Y >= Height)
+                throw new ArgumentException();
+            if (!Maze[value.Y, value.X])
+                throw new ArgumentException();
+            _playerPosition = value;
         }
     }
+    
+    protected override void ExecuteProgressCommand(IReadOnlyCommand command)
+    {
+        throw new InvalidCastException();
+    }
 
-    private void UpdateTitle()
+    private void UpdateProgressTitle()
     {
         var builder = new StringBuilder();
         builder.AppendLine("Текущее состояние лабиринта: ");
@@ -61,35 +68,22 @@ public class MazeChallenge : Challenge
         {
             for (var j = 0; j < Height; j++)
             {
-                var c = Maze[i, j];
                 if (PlayerPosition == new Point(j, i))
                     builder.Append('.');
                 else
-                    builder.Append(c ? ' ' : '#');
+                    builder.Append(Maze[i, j] ? ' ' : '#');
             }
 
             builder.Append('\n');
-
-            // builder[2] = 'f';
         }
 
-        Title = builder.ToString();
+        ProgressTitle = builder.ToString();
     }
 
-    protected override IEnumerable<IReadOnlyCommand> GetProgressCommands()
+    protected override IEnumerable<ICommand> GetProgressCommands()
     {
-        var d = new Dictionary<Point, string>
-        {
-            [new Point(0, -1)] = "u",
-            [new Point(-1, 0)] = "l",
-            [new Point(0, 1)] = "d",
-            [new Point(1, 0)] = "r",
-        };
-        var moves = GetPossibleMoves();
-        commands = moves
-            .Select(p => new MazeCommand($"Двигаться в позицию ({p.X};{p.Y})", p, d[p]));
-
-        return commands;
+        return GetPossibleMoves()
+            .Select(p => new MoveCommand(this, p, _directions[p]));
     }
 
     private void UpdateState()
@@ -102,16 +96,8 @@ public class MazeChallenge : Challenge
             IsPassed = true;
             State = ChallengeState.Finished;
         }
-    }
 
-    public void MovePlayer(Point offset)
-    {
-        var newPosition = PlayerPosition.Add(offset);
-        if (newPosition.X >= Width || newPosition.Y >= Height || newPosition.Y < 0 || newPosition.Y < 0)
-            throw new ArgumentException();
-        if (!Maze[newPosition.Y, newPosition.X])
-            throw new ArgumentException();
-        PlayerPosition = newPosition;
+        UpdateProgressTitle();
     }
 
     private List<Point> GetPossibleMoves()
