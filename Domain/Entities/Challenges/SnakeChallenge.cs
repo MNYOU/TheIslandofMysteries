@@ -11,7 +11,9 @@ namespace Domain.Entities.Challenges
         private Random rnd;
         private int levelDangerSnake;
         public override bool IsPassed { get; protected set; }
-        public override string ProgressTitle { get; protected set; }
+
+        public override string Title => throw new NotImplementedException();
+
         public SnakeChallenge() 
         { 
             rnd = new Random();
