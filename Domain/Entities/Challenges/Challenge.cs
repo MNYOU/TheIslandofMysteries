@@ -17,7 +17,7 @@ public abstract class Challenge : IContext
         };
     }
 
-    public string Title { get; protected set; }
+    public abstract string Title { get; }
 
     // public string Description { get; }
 
@@ -25,7 +25,7 @@ public abstract class Challenge : IContext
 
     public ChallengeState State { get; protected set; }
 
-    public abstract string ProgressTitle { get; protected set; }
+    // public abstract string ProgressTitle { get; protected set; }
     
     public void Start()
     {
