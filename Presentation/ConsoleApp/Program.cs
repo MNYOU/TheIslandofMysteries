@@ -1,5 +1,5 @@
 ﻿using Application.GameEngine;
-using Application.GameEngine.Controllers;
+//using Application.GameEngine.Controllers;
 using Domain;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
     {
         var launcher = new GameLauncher();
 
-        var controller = new GameController();
+        //var controller = new GameController();
         Console.WriteLine("Вы начинаете игру \"Остров загадок\"!\nБудет весело, до жути!");
 
         var game = launcher.Start();

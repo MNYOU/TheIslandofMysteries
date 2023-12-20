@@ -2,6 +2,6 @@
 
 public enum ItemType
 {
-    Gear,
-    Weapon,
+    CharacterItem,
+    ItemForGame,
 }

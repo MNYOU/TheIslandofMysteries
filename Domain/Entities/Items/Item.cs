@@ -2,7 +2,7 @@
 
 namespace Domain.Entities.Items;
 
-public class Item
+public interface Item
 {
     public string Name { get; }
 

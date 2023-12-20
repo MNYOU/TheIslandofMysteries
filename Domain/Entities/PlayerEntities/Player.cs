@@ -16,7 +16,8 @@ public class Player
 
     public IEnumerable<ICommand> GetAvailableActions()
     {
-        if (IsAlive) return Array.Empty<ICommand>();
+        if (IsAlive) 
+            return Array.Empty<ICommand>();
 
         return Array.Empty<ICommand>();
     }
