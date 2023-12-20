@@ -13,10 +13,7 @@ public class Game: IContext
     {
         Player = player;
         Map = map;
-
-        UpdateContext();
         Result = GameResult.NotDefined;
-
         Title = "Остров загадок";
     }
 
@@ -27,21 +24,11 @@ public class Game: IContext
     public Map Map { get; private set; }
 
     public bool IsOver => Result != GameResult.NotDefined;
-
-    private IContext context;
-
+    
     public string Title { get; }
-
-    public IContext GetContext()
-    {
-        UpdateState();
-        UpdateContext();
-        return context;
-    }
 
     private void UpdateState()
     {
-        var pLoc = Map.PlayerLocation;
         if (Map.PlayerInLastLocation()
             && Map.PlayerLocation.Challenges.All(c => c.IsPassed)
             && Player.IsAlive)
@@ -50,98 +37,19 @@ public class Game: IContext
 
     public IEnumerable<ICommand> GetAvailableActions()
     {
-        UpdateContext();
-        if (context == this)
+        if (IsOver)
         {
-            if (IsOver)
+            if (Result == GameResult.Passed)
             {
-                if (Result == GameResult.Passed)
+                return new ICommand[]
                 {
-                    return new ICommand[]
-                    {
-                        new FinishCommand(),
-                    };
-                }
-            }
-            return new ICommand[]
-            {
-                new StartGameCommand(this),
-            };
-        }
-        return context.GetAvailableActions();
-    }
-
-    public void Execute(ICommand command)
-    {
-        command.Execute();
-        // if (GetAvailableActions().All(c => c.Key != command.Key))
-        //     throw new ArgumentException();
-        //
-        // ExecuteAction(command);
-    }
-    
-    private void ExecuteAction(ICommand command)
-    {
-        return;
-        // command.Execute();
-        // UpdateContext();
-        // if (context == this)
-        // {
-        //     if (command.Key[0] == 'n')
-        //     {
-        //         
-        //     }
-        //     else if (command.Key[0] == 'e')
-        //     {
-        //         Environment.Exit(1);
-        //     }
-        //
-        //     return;
-        // }
-        // else
-        // {
-        //     context.Execute(command);
-        // }
-    }
-
-    private void UpdateContext()
-    {
-        if (!Player.IsAlive)
-        {
-            context = this;
-            return;                
-        }
-
-        var actions = Map.GetAvailableActions();
-        if (actions.Any())
-        {
-            context = Map;
-            return;
-        }
-
-        var playerLocation = Map.PlayerLocation;
-        if (playerLocation != null)
-        {
-            actions = playerLocation.GetAvailableActions();
-            if (actions.Any())
-            {
-                context = playerLocation;
-                return;
-            }
-            var challenge = playerLocation.CurrentChallenge;
-            if (challenge != null && challenge.GetAvailableActions().Any())
-            {
-                context = challenge;
-                return;                
+                    new FinishCommand(),
+                };
             }
         }
-        else
+        return new ICommand[]
         {
-            context = Map;
-            return;
-        }
-
-
-        context = this;
+            new StartGameCommand(this),
+        };
     }
 }

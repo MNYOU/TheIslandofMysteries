@@ -1,41 +1,51 @@
-﻿using Application.GameEngine;
-//using Application.GameEngine.Controllers;
-using Domain;
+﻿using Application;
+using Application.Context;
+using Application.GameEngine;
+using static System.Console;
 
 internal class Program
 {
+    private static GameController _controller;
+    
     public static void Main(string[] args)
     {
-        var launcher = new GameLauncher();
-
-        //var controller = new GameController();
-        Console.WriteLine("Вы начинаете игру \"Остров загадок\"!\nБудет весело, до жути!");
-
-        var game = launcher.Start();
+        Initialize();
+        WriteLine("Вы начинаете игру \"Остров загадок\"!\nБудет весело, до жути!");
+        
         while (true)
         {
-            var context = game.GetContext();
-            Console.WriteLine(context.Title);
-            var commands = context.GetAvailableActions();
-            Write(commands);
-            var userInput = Console.ReadKey();
-            var selected = commands.FirstOrDefault(c => c.Key == userInput.KeyChar);
-            if (selected == null)
-            {
-                Console.WriteLine("Ошибка. Неверный ввод!");
-                continue;
-            }
+            var context = _controller.GetCurrentContext();
+            WriteLine(context.Title);
+            // var commands = context.GetAvailableActions();
+            Write(context.Commands);
+            var userInput = ReadLine();
 
-            game.Execute(selected);
+            try
+            {
+                _controller.ExecuteCommand(userInput[0]);
+            }
+            catch (Exception e)
+            {
+                WriteLine("Ошибка при выполнении команды! ", e);
+                throw;
+            }
         }
     }
 
-    private static void Write(IEnumerable<ICommand> commands)
+    public static void Initialize()
     {
-        Console.WriteLine("Выберите действия: ");
+        var launcher = new GameLauncher();
+        var game = launcher.Start();
+        var context = new ContextProvider(game);
+        _controller = new GameController(context);
+    }
+
+    private static void Write(IEnumerable<IViewCommand> commands)
+    {
+        WriteLine("Выберите действия: ");
         foreach (var command in commands)
         {
-            Console.WriteLine($"{command.Key} {command.Title}");
+            WriteLine($"{command.Key} {command.Title}");
         }
     }
 }

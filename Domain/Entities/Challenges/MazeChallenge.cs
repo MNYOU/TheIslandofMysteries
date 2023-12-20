@@ -20,8 +20,6 @@ public class MazeChallenge : Challenge
             throw new ArgumentException();
         Width = width;
         Height = height;
-
-        // UpdateProgressTitle();
     }
     
     private readonly Dictionary<Point, char> _directions = new()
@@ -40,7 +38,17 @@ public class MazeChallenge : Challenge
     
     public override bool IsPassed { get; protected set; }
 
-    public override string ProgressTitle { get; protected set; } = "";
+    public override string Title
+    {
+        get
+        {
+            if (State == ChallengeState.NotStarted)
+                return "Говорят, у лабиринта нет выхода. Ещё никому не удавалось сбежать из него!";
+            return GetProgressTitle();
+        }
+        
+    }
+
 
     public Point PlayerPosition
     {
@@ -52,6 +60,7 @@ public class MazeChallenge : Challenge
             if (!Maze[value.Y, value.X])
                 throw new ArgumentException();
             _playerPosition = value;
+            UpdateState();
         }
     }
     
@@ -60,7 +69,7 @@ public class MazeChallenge : Challenge
         throw new InvalidCastException();
     }
 
-    private void UpdateProgressTitle()
+    private string GetProgressTitle()
     {
         var builder = new StringBuilder();
         builder.AppendLine("Текущее состояние лабиринта: ");
@@ -77,7 +86,7 @@ public class MazeChallenge : Challenge
             builder.Append('\n');
         }
 
-        ProgressTitle = builder.ToString();
+        return builder.ToString();
     }
 
     protected override IEnumerable<ICommand> GetProgressCommands()
@@ -96,8 +105,6 @@ public class MazeChallenge : Challenge
             IsPassed = true;
             State = ChallengeState.Finished;
         }
-
-        UpdateProgressTitle();
     }
 
     private List<Point> GetPossibleMoves()
