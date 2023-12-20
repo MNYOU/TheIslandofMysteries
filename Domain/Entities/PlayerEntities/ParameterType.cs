@@ -6,4 +6,5 @@ public enum ParameterType
     Strength,
     Agility,
     Luck,
+    Speed,
 }

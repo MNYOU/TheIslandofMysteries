@@ -39,12 +39,13 @@ public class GameLauncher
     {
         // генерация р.н. предметов, характеристик
         var items = new List<Item>();
-        var parameters = new List<Parameter>()
+        var parameters = new Dictionary<ParameterType, Parameter>()
         {
-            new Parameter(ParameterType.Health, 50),
-            new Parameter(ParameterType.Agility, 50),
-            new Parameter(ParameterType.Luck, 50),
-            new Parameter(ParameterType.Strength, 50),
+            { ParameterType.Health, new Parameter(ParameterType.Health, 50, 100) },
+            { ParameterType.Agility,  new Parameter(ParameterType.Agility, 50, 100) },
+            { ParameterType.Luck, new Parameter(ParameterType.Luck, 50, 100) },
+            { ParameterType.Strength, new Parameter(ParameterType.Strength, 50, 100) },
+            { ParameterType.Speed, new Parameter(ParameterType.Speed, 50, 100) },
         };
         var player = new Player()
         {
