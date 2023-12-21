@@ -6,11 +6,11 @@ namespace Domain.Entities.Challenges;
 
 public abstract class Challenge : IContext
 {
-    private ICommand[] DefaultCommands;
+    private ICommand[] _defaultCommands;
 
     protected Challenge()
     {
-        DefaultCommands = new ICommand[]
+        _defaultCommands = new ICommand[]
         {
             new StartChallengeCommand(this),
             new ExitCommand(),
@@ -42,17 +42,6 @@ public abstract class Challenge : IContext
             _ => Array.Empty<ICommand>()
         };
     }
-
-    public void Execute(IReadOnlyCommand command)
-    {
-        // var defaultCommand = DefaultCommands.FirstOrDefault(c => c.Equals(command));
-        // if (defaultCommand != null)
-        //     Start();
-        // else
-        //     ExecuteProgressCommand(command);
-    }
-    
-    protected abstract void ExecuteProgressCommand(IReadOnlyCommand command);
 
     protected abstract IEnumerable<ICommand> GetProgressCommands();
 }

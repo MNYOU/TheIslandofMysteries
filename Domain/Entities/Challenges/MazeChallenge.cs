@@ -64,11 +64,6 @@ public class MazeChallenge : Challenge
         }
     }
     
-    protected override void ExecuteProgressCommand(IReadOnlyCommand command)
-    {
-        throw new InvalidCastException();
-    }
-
     private string GetProgressTitle()
     {
         var builder = new StringBuilder();

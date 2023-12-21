@@ -21,11 +21,6 @@ namespace Domain.Entities.Challenges
 
         }
 
-        protected override void ExecuteProgressCommand(IReadOnlyCommand command)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override IEnumerable<ICommand> GetProgressCommands()
         {
             throw new NotImplementedException();

@@ -17,11 +17,6 @@ public class Riddle: Challenge
     public override bool IsPassed { get; protected set; }
     public  string ProgressTitle { get; protected set; }
 
-    protected override void ExecuteProgressCommand(IReadOnlyCommand command)
-    {
-        throw new NotImplementedException();
-    }
-
     protected override IEnumerable<ICommand> GetProgressCommands()
     {
         throw new NotImplementedException();

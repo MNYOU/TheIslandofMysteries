@@ -36,27 +36,12 @@ public abstract class Location : IContext
 
     public IEnumerable<ICommand> GetAvailableActions()
     {
-        if (CurrentChallenge == null || CurrentChallenge.State == ChallengeState.Finished && CurrentChallenge != Challenges.Last())
+        if (CurrentChallenge == null ||
+            CurrentChallenge.State == ChallengeState.Finished && CurrentChallenge != Challenges.Last())
             return new ICommand[]
             {
                 new GoToNextCommand(this),
             };
         return new ICommand[0];
-    }
-
-    public void Execute(IReadOnlyCommand command)
-    {
-        return;
-        if (command.Key == "n")
-        {
-            if (CurrentChallenge != null && CurrentChallenge.State != ChallengeState.Finished)
-                throw new InvalidOperationException();
-            GoToNextChallenge();
-            // var index = Challenges.IndexOf(CurrentChallenge);
-            // if (index == Challenges.Count + 1)
-            // CurrentChallenge = null;
-        }
-        else
-            throw new NotImplementedException();
     }
 }

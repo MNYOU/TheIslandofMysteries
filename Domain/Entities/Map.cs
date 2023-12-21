@@ -7,14 +7,11 @@ namespace Domain.Entities;
 
 public class Map: IContext
 {
-    public Map()
-    {
-        Title = "Длинный путь предстоит страннику, вставшему на путь к сокровищу";
-    }
-    
     public List<Location> Locations { get; set; }
     
     public Location PlayerLocation { get; private set; }
+
+    public string Title { get; } = "Длинный путь предстоит страннику, вставшему на путь к сокровищу";
 
     public void MovePlayerToNextLocation()
     {
@@ -23,8 +20,6 @@ public class Map: IContext
             throw new InvalidOperationException();
         PlayerLocation = Locations[index + 1];
     }
-
-    public string Title { get; }
 
     public IEnumerable<ICommand> GetAvailableActions()
     {
@@ -36,17 +31,6 @@ public class Map: IContext
 
         var nextLoc = Locations[index + 1];
         return new ICommand[] { new GoToNextCommand(this, nextLoc) };
-    }
-
-    public void Execute(IReadOnlyCommand command)
-    {
-        return;
-        if (command.Key == "m")
-        {
-            MovePlayerToNextLocation();
-        }
-        else
-            throw new ArgumentException();
     }
 
     public bool PlayerInLastLocation()
